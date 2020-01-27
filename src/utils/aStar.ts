@@ -5,7 +5,9 @@ const verticles = [10, 51, 22, 43233, 4, 5, 666, 7, 8, 9, 10, 11, 12].map(
   id => ({ id } as Verticle<number>)
 );
 
-const getNeighbors = (v: Verticle<number>) => {
+export const getNeighbors1D = (verticles: VerticlesArray<number>) => (
+  v: Verticle<number>
+) => {
   const vArray: VerticlesArray<number> = [];
   const targetIndex = verticles.indexOf(v);
 
@@ -19,12 +21,14 @@ const getNeighbors = (v: Verticle<number>) => {
 };
 
 const pathFinder = new PathFinder<number>(
-  verticles[0],
+  verticles[1],
   verticles[9],
-  getNeighbors
+  getNeighbors1D(verticles)
 );
 
 export function runTest() {
+  pathFinder.loopFuse = 12;
+
   const path = pathFinder.calculate();
 
   console.info("path after iteration:", path);

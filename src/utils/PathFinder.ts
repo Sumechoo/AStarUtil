@@ -1,25 +1,27 @@
-import { Verticle, VerticlesArray } from "../types";
+import { Verticle, VerticlesArray, NeighborsGetter } from "../types";
 
 export class PathFinder<T> {
   private frontire: VerticlesArray<T> = [];
   private touched: VerticlesArray<T> = [];
   private path: VerticlesArray<T> = [];
-  private pathFound = false;
+  private start: Verticle<T>;
   private target: Verticle<T>;
+  private pathFound = false;
 
   public loopFuse = 300;
 
   constructor(
     from: Verticle<T>,
     to: Verticle<T>,
-    getNeighbors: (v: Verticle<T>) => Verticle<T>[]
+    getNeighbors: NeighborsGetter<T>
   ) {
+    this.start = from;
     this.target = to;
     this.frontire = [from];
     this.getNeighbors = getNeighbors;
   }
 
-  getNeighbors: (v: Verticle<T>) => Verticle<T>[] = null;
+  getNeighbors: NeighborsGetter<T> = null;
 
   iterationStep() {
     const newFrontire: VerticlesArray<T> = [];
@@ -27,6 +29,7 @@ export class PathFinder<T> {
     this.frontire.forEach(frontireItem =>
       this.getNeighbors(frontireItem).forEach(neighbor => {
         if (neighbor === this.target) {
+          this.pathFound = true;
           this.collectPath(neighbor);
         }
 
@@ -42,7 +45,7 @@ export class PathFinder<T> {
   }
 
   collectPath(v: Verticle<T>) {
-    if (v.cameFrom) {
+    if (v.cameFrom && v !== this.start) {
       this.path.push(v.cameFrom);
       this.collectPath(v.cameFrom);
     }
@@ -50,6 +53,9 @@ export class PathFinder<T> {
 
   calculate() {
     let iterationCount = 0;
+
+    this.path = [];
+    this.pathFound = false;
 
     while (this.frontire.length > 0) {
       iterationCount++;
