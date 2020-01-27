@@ -1,8 +1,6 @@
-export interface Verticle {
-  id: number;
-  cameFrom?: Verticle;
+export interface Verticle<T> {
+  id: T;
+  cameFrom?: Verticle<T>;
 }
 
-export interface Graph {
-  verticles: Array<Verticle>;
-}
+export type VerticlesArray<T> = Array<Verticle<T>>;
