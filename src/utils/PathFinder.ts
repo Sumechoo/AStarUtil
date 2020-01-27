@@ -14,10 +14,21 @@ export class PathFinder<T> {
   ) {
     this.frontire = getNeighbors(from);
     this.touched.push(from);
+    this.getNeighbors = getNeighbors;
   }
+
+  getNeighbors: (v: Verticle<T>) => Verticle<T>[] = null;
 
   iterationStep() {
     const newFrontire: VerticlesArray<T> = [];
+
+    this.frontire.forEach(frontireItem =>
+      this.getNeighbors(frontireItem).forEach(neighbor => {
+        if (!this.touched.includes(neighbor)) {
+          newFrontire.push(neighbor);
+        }
+      })
+    );
 
     this.touched.push(...this.frontire);
     this.frontire = newFrontire;
@@ -26,7 +37,8 @@ export class PathFinder<T> {
   calculate() {
     let iterationCount = 0;
 
-    while (!this.pathFound) {
+    while (this.frontire.length > 0) {
+      console.info("current step frontire:", this.frontire);
       iterationCount++;
       if (iterationCount > this.loopFuse) {
         console.warn(
