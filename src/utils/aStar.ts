@@ -1,9 +1,5 @@
 import { Verticle, VerticlesArray } from "../types";
-import { PathFinder } from "./PathFinder";
-
-const verticles = [10, 51, 22, 43233, 4, 5, 666, 7, 8, 9, 10, 11, 12].map(
-  id => ({ id } as Verticle<number>)
-);
+import { BASE_2D } from "../components/PathMatrix";
 
 export const getNeighbors1D = (verticles: VerticlesArray<number>) => (
   v: Verticle<number>
@@ -20,16 +16,21 @@ export const getNeighbors1D = (verticles: VerticlesArray<number>) => (
   return vArray;
 };
 
-const pathFinder = new PathFinder<number>(
-  verticles[1],
-  verticles[9],
-  getNeighbors1D(verticles)
-);
+export const getNeighbors2D = (verticles: VerticlesArray<number>) => (
+  v: Verticle<number>
+) => {
+  const vArray: VerticlesArray<number> = [];
+  const targetIndex = verticles.indexOf(v);
 
-export function runTest() {
-  pathFinder.loopFuse = 12;
+  const leftNeighbor = verticles[targetIndex - 1];
+  const rightNeighbor = verticles[targetIndex + 1];
+  const topNeighbor = verticles[targetIndex + BASE_2D];
+  const bottomNeighbor = verticles[targetIndex - BASE_2D];
 
-  const path = pathFinder.calculate();
+  if (leftNeighbor) vArray.push(leftNeighbor);
+  if (rightNeighbor) vArray.push(rightNeighbor);
+  if (topNeighbor) vArray.push(topNeighbor);
+  if (bottomNeighbor) vArray.push(bottomNeighbor);
 
-  console.info("path after iteration:", path);
-}
+  return vArray;
+};
