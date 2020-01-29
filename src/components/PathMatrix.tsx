@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { VerticlesArray, Verticle } from "../types";
 
-export const BASE_2D = 10;
+export const BASE_2D = 15;
 
 interface ButtonProps {
   value: Verticle<number>;
@@ -12,6 +12,12 @@ interface ButtonProps {
 const PathButton: React.FC<ButtonProps> = props => {
   const { value, highlighted, setStart } = props;
 
+  let backgroundColor = highlighted && "lightcoral";
+
+  if (value.isSolid) {
+    backgroundColor = "black";
+  }
+
   const onHoverCallback = useCallback(() => {
     value.cameFrom = undefined;
     setStart(value);
@@ -21,9 +27,10 @@ const PathButton: React.FC<ButtonProps> = props => {
     <button
       onMouseEnter={onHoverCallback}
       style={{
+        color: "rgba(0,0,0,0)",
         width: 30,
         height: 30,
-        backgroundColor: highlighted ? "lightcoral" : undefined
+        backgroundColor
       }}
     >
       {value.id}

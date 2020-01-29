@@ -33,7 +33,7 @@ export class PathFinder<T> {
           this.collectPath(neighbor);
         }
 
-        if (!this.touched.includes(neighbor)) {
+        if (!this.touched.includes(neighbor) && !neighbor.cameFrom) {
           neighbor.cameFrom = frontireItem;
           newFrontire.push(neighbor);
         }

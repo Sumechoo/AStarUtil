@@ -27,10 +27,21 @@ export const getNeighbors2D = (verticles: VerticlesArray<number>) => (
   const topNeighbor = verticles[targetIndex + BASE_2D];
   const bottomNeighbor = verticles[targetIndex - BASE_2D];
 
-  if (leftNeighbor) vArray.push(leftNeighbor);
-  if (rightNeighbor) vArray.push(rightNeighbor);
-  if (topNeighbor) vArray.push(topNeighbor);
-  if (bottomNeighbor) vArray.push(bottomNeighbor);
+  function pushIfValid(v: Verticle<number>) {
+    const mod = targetIndex % BASE_2D;
+    const tmod = mod + 1;
+    const bmod = mod - 1;
+    const isModValid = bmod >= -0 && tmod <= BASE_2D;
+
+    if (v && !v.isSolid && isModValid) {
+      vArray.push(v);
+    }
+  }
+
+  pushIfValid(leftNeighbor);
+  pushIfValid(rightNeighbor);
+  pushIfValid(topNeighbor);
+  pushIfValid(bottomNeighbor);
 
   return vArray;
 };
